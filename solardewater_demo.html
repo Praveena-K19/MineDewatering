@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SolarDewater EdgeGuard AI - Interactive Digital Twin & Control Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cyan: '#06b6d4',
+              amber: '#f59e0b',
+              emerald: '#10b981'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.4);
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 font-sans antialiased min-h-screen custom-scrollbar flex flex-col selection:bg-cyan-500 selection:text-black">
+
+  <!-- TOP ESG & ROI TICKER BANNER -->
+  <header class="bg-[#0f172a]/95 border-b border-cyan-900/50 backdrop-blur sticky top-0 z-50 px-4 py-2.5 shadow-lg">
+    <div class="max-w-[1700px] mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Title & Branding -->
+      <div class="flex items-center gap-3">
+        <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-amber-500 text-slate-950 font-black text-xl shadow-md">
+          ☀️
+          <span class="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#0b0f19] animate-ping"></span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-black tracking-wider text-cyan-400">SolarDewater EdgeGuard AI</h1>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-700/60 rounded-full">v2.6 EDGE-TINYML</span>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/60 rounded-full flex items-center gap-1">
+              <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> LoRa MESH ONLINE
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">Autonomous Predictive Inundation Triage & Solar Microgrid Optimization</p>
+        </div>
+      </div>
+
+      <!-- Live ESG & Financial ROI Ticker -->
+      <div class="flex items-center flex-wrap gap-2 text-xs bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
+        <div class="flex items-center gap-1.5 px-2 py-1 bg-amber-950/40 border border-amber-800/40 rounded text-amber-300">
+          <span>🛢️</span>
+          <span>Diesel Saved Today: <strong id="valDiesel" class="text-amber-200">48.5 L (₹4,608)</strong></span>
+        </div>
+        <div class="flex items-center gap-1.5 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 rounded text-emerald-300">
+          <span>🌱</span>
+          <span>CO₂ Averted: <strong id="valCO2" class="text-emerald-200">3.8 Tons</strong></span>
+        </div>
+        <div class="flex items-center gap-1.5 px-2 py-1 bg-cyan-950/40 border border-cyan-800/40 rounded text-cyan-300">
+          <span>⏱️</span>
+          <span>Payback: <strong class="text-cyan-200">&lt; 24 Days</strong></span>
+        </div>
+      </div>
+
+      <!-- Quick Tour & Mode Controls -->
+      <div class="flex items-center gap-2">
+        <button id="btnTour" onclick="startGuidedTour()" class="px-3 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs rounded-lg shadow transition-all flex items-center gap-1.5 cursor-pointer">
+          <span>✨</span> HOW IT WORKS (GUIDED TOUR)
+        </button>
+        <button id="btnAudioMute" onclick="toggleAudio()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg border border-slate-700 flex items-center gap-1 cursor-pointer">
+          <span id="audioIcon">🔊</span> <span id="audioText" class="hidden sm:inline">Sound ON</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="flex-1 max-w-[1700px] w-full mx-auto p-3 sm:p-4 space-y-4">
+
+    <!-- 🎮 SCENARIO SIMULATOR STRIP (JURY TEST BENCH) -->
+    <section class="bg-gradient-to-r from-slate-900 via-[#111c35] to-slate-900 border border-cyan-800/50 rounded-xl p-3 shadow-md">
+      <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🎮</span>
+          <div>
+            <h2 class="text-xs font-black uppercase tracking-wider text-cyan-400">Jury Test Bench & Live Scenarios</h2>
+            <p class="text-[11px] text-slate-400">Simulate extreme open-cast mining conditions in 1-click to evaluate Edge-AI response:</p>
+          </div>
+        </div>
+
+        <!-- 5 Interactive Scenario Buttons -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 w-full lg:w-auto">
+          <button onclick="setScenario('normal')" id="btnScenNormal" class="scen-btn px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-emerald-600 bg-emerald-950/60 text-emerald-300 hover:bg-emerald-900/80 transition flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>🟢</span> 1. Normal (50Hz)
+          </button>
+          <button onclick="setScenario('flood')" id="btnScenFlood" class="scen-btn px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-red-700/60 bg-red-950/40 text-red-300 hover:bg-red-900/80 transition flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>⛈️</span> 2. Flash Flood
+          </button>
+          <button onclick="setScenario('choke')" id="btnScenChoke" class="scen-btn px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-amber-700/60 bg-amber-950/40 text-amber-300 hover:bg-amber-900/80 transition flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>⚠️</span> 3. Sludge Choke
+          </button>
+          <button onclick="setScenario('lowsolar')" id="btnScenSolar" class="scen-btn px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-indigo-700/60 bg-indigo-950/40 text-indigo-300 hover:bg-indigo-900/80 transition flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>☁️</span> 4. Low Solar
+          </button>
+          <button onclick="setScenario('failover')" id="btnScenFail" class="scen-btn px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-purple-700/60 bg-purple-950/40 text-purple-300 hover:bg-purple-900/80 transition flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>🔄</span> 5. Auto Failover
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🟢 8 SYNCHRONIZED REAL-TIME KPI TILES -->
+    <section class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
+      <!-- KPI 1: Sump Water Level -->
+      <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl flex flex-col justify-between shadow">
+        <div class="flex items-center justify-between text-[11px] text-slate-400">
+          <span>Water Depth</span>
+          <span class="text-cyan-400">🌊 Depth</span>
+        </div>
+        <div class="my-1">
+          <span id="kpiDepth" class="text-lg font-black text-cyan-300">2.45 m</span>
+          <span class="text-[10px] text-slate-500 block">Crit: 4.20 m</span>
+        </div>
+        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div id="barDepth" class="bg-cyan-500 h-full rounded-full transition-all duration-500" style="width: 58%"></div>
+        </div>
+      </div>
+
+      <!-- KPI 2: Inflow vs Outflow -->
+      <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl flex flex-col justify-between shadow">
+        <div class="flex items-center justify-between text-[11px] text-slate-400">
+          <span>Inflow / Out</span>
+          <span class="text-emerald-400">⚖️ Q-Rate</span>
+        </div>
+        <div class="my-1">
+          <span id="kpiFlow" class="text-base font-black text-emerald-300">430 L/m</span>
+          <span id="kpiInflowSub" class="text-[10px] text-slate-400 block">In: 380 L/min</span>
+        </div>
+        <span id="badgeFlowBalance" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono inline-block">Drawdown Active</span>
+      </div>
+
+      <!-- KPI 3: PINN Time-to-Critical -->
+      <div id="boxTTC" class="bg-slate-900/90 border border-cyan-800/80 p-2.5 rounded-xl flex flex-col justify-between shadow relative overflow-hidden">
+        <div class="flex items-center justify-between text-[11px] text-slate-400">
+          <span>PINN TTC</span>
+          <span class="text-amber-400">⏱️ Forecast</span>
+        </div>
+        <div class="my-1">
+          <span id="kpiTTC" class="text-base font-black text-amber-300">3h 42m</span>
+          <span class="text-[10px] text-slate-400 block">AI Conf: 94%</span>
+        </div>
+        <span id="badgeTTC" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold">SAFE FREEBOARD</span>
+      </div>
+
+      <!-- KPI 4: Motor 3-Phase Current -->
+      <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl flex flex-col justify-between shadow">
+        <div class="flex items-center justify-between text-[11px] text-slate-400">
+          <span>Motor Current</span>
+          <span class="text-blue-400">⚡ CT Hall</span>
+        </div>
+        <div class="my-1">
+          <span id="kpiCurrent" class="text-lg font-black text-blue-300">8.1 A</span>
+          <span id="kpiCurrentStatus" class="text-[10px] text-slate-500 block">Nominal (8.0A)</span>
+        </div>
+        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div id="barCurrent" class="bg-blue-500 h-full rounded-full transition-all duration-500" style="width: 50%"></div>
+        </div>
+      </div>
+
+      <!-- KPI 5: Cavitation Vibration FFT -->
+      <div id="boxVib" class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl flex flex-col justify-between shadow">
+        <div class="flex items-center justify-between text-[11px] text-slate-400">
+          <span>Vibration</span>
+          <span class="text-purple-400">📳 MEMS</span>
+        </div>
+        <div class="my-1">
+          <span id="kpiVib" class="text-lg font-black text-purple-300">2.1 mm/s</span>
+          <span id="kpiVibStatus" class="text-[10px] text-emerald-400 block">Laminar Flow</span>
+        </div>
+        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div id="barVib" class="bg-purple-500 h-full rounded-full transition-all duration-500" style="width: 25%"></div>
+        </div>
+      </div>
+
+      <!-- KPI 6: Slurry Density / Turbidity -->
+      <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl flex flex-col justify-between shadow">
+        <div class="flex items-center justify-between text-[11px] text-slate-400">
+          <span>Turbidity</span>
+          <span class="text-amber-400">🧪 Sludge</span>
+        </div>
+        <div class="my-1">
+          <span id="kpiTurbidity" class="text-lg font-black text-amber-300">420 NTU</span>
+          <span id="kpiVFDHz" class="text-[10px] text-cyan-300 block font-mono">VFD: 50.0 Hz</span>
+        </div>
+        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div id="barTurbidity" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 20%"></div>
+        </div>
+      </div>
+
+      <!-- KPI 7: Solar PV Yield -->
+      <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl flex flex-col justify-between shadow">
+        <div class="flex items-center justify-between text-[11px] text-slate-400">
+          <span>Solar PV</span>
+          <span class="text-yellow-400">☀️ MPPT</span>
+        </div>
+        <div class="my-1">
+          <span id="kpiSolar" class="text-lg font-black text-yellow-300">18.4 kW</span>
+          <span id="kpiIrradiance" class="text-[10px] text-slate-400 block">890 W/m²</span>
+        </div>
+        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div id="barSolar" class="bg-yellow-400 h-full rounded-full transition-all duration-500" style="width: 90%"></div>
+        </div>
+      </div>
+
+      <!-- KPI 8: LiFePO4 Microgrid & P2P -->
+      <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl flex flex-col justify-between shadow">
+        <div class="flex items-center justify-between text-[11px] text-slate-400">
+          <span>Battery SoC</span>
+          <span class="text-emerald-400">🔋 BMS</span>
+        </div>
+        <div class="my-1">
+          <span id="kpiSoC" class="text-lg font-black text-emerald-300">92%</span>
+          <span id="kpiP2P" class="text-[10px] text-cyan-300 block">P2P Link: Pit-A OK</span>
+        </div>
+        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div id="barSoC" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 92%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MIDDLE SECTION: DIGITAL TWIN (CANVAS) + AI DECISION CENTER -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+
+      <!-- 📦 LEFT: 2D/3D MINE PIT DIGITAL TWIN CANVAS (7 COLS) -->
+      <section class="lg:col-span-7 bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow-lg flex flex-col">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="text-base">📦</span>
+            <h2 class="text-xs sm:text-sm font-black text-cyan-400 uppercase tracking-wide">
+              Mine Pit Subterranean Digital Twin (Bench EL +40m to +120m)
+            </h2>
+          </div>
+          <div class="flex items-center gap-2 text-[11px]">
+            <span class="flex items-center gap-1 text-slate-400 font-mono">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span> 60 FPS Engine
+            </span>
+          </div>
+        </div>
+
+        <!-- Canvas Container with Interactive Overlay -->
+        <div class="relative flex-1 mt-2 min-h-[360px] bg-[#070b14] rounded-lg overflow-hidden border border-slate-800">
+          <canvas id="digitalTwinCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+
+          <!-- Floating Info Tag on Canvas -->
+          <div id="twinTooltip" class="absolute bottom-2 left-2 bg-slate-950/90 border border-cyan-700/60 rounded px-2.5 py-1.5 text-[11px] text-slate-300 pointer-events-none backdrop-blur shadow">
+            💡 <strong class="text-cyan-300">Live Physics:</strong> Reverse flow backwash ready. Turbidity-adaptive particle coloring active.
+          </div>
+
+          <!-- Quick Action Buttons on Top of Canvas -->
+          <div class="absolute top-2 right-2 flex flex-col gap-1.5">
+            <button onclick="triggerAutoBackwashManual()" class="px-2.5 py-1 bg-amber-500/90 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded shadow flex items-center gap-1 backdrop-blur cursor-pointer">
+              <span>🔄</span> AUTO-BACKWASH
+            </button>
+            <button onclick="toggleSludgeTurbidity()" class="px-2.5 py-1 bg-cyan-900/80 hover:bg-cyan-800 text-cyan-200 font-bold text-[10px] rounded border border-cyan-600/50 shadow flex items-center gap-1 backdrop-blur cursor-pointer">
+              <span>🧪</span> TOGGLE SLURRY
+            </button>
+          </div>
+        </div>
+
+        <!-- Canvas Sub-Legend -->
+        <div class="mt-2.5 pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between text-[11px] text-slate-400 gap-2">
+          <div class="flex items-center gap-3">
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-yellow-400 rounded-sm inline-block"></span> Solar Array (Surface)</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-cyan-400 rounded-sm inline-block"></span> LoRa Repeater Beacons</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-blue-500 rounded-sm inline-block"></span> Submersible Pump #1</span>
+          </div>
+          <span class="text-slate-500">Click canvas objects to inspect sensor telemetry</span>
+        </div>
+      </section>
+
+      <!-- 🧠 RIGHT: AI DECISION CENTER & NEURAL CONVERGENCE (5 COLS) -->
+      <section class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow-lg flex flex-col justify-between space-y-3">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🧠</span>
+            <h2 class="text-xs sm:text-sm font-black text-cyan-400 uppercase tracking-wide">
+              TinyML Neural Decision Engine
+            </h2>
+          </div>
+          <span id="aiStatusBadge" class="px-2 py-0.5 text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/60 rounded">
+            CONFIDENCE: 94.6%
+          </span>
+        </div>
+
+        <!-- 4 Multi-Signal Streams Convergence -->
+        <div class="space-y-2 text-xs">
+          <div class="flex items-center justify-between bg-slate-950/60 p-2 rounded border border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+              <span class="text-slate-300">1. Hydrodynamic PINN:</span>
+            </div>
+            <span id="streamPINN" class="font-mono text-cyan-300 font-bold">TTC: 3h 42m (Drawdown Nominal)</span>
+          </div>
+
+          <div class="flex items-center justify-between bg-slate-950/60 p-2 rounded border border-slate-800">
+            <div class="flex items-center gap-2">
+              <span id="dotCavitation" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span class="text-slate-300">2. MCSA & FFT Cavitation:</span>
+            </div>
+            <span id="streamCavitation" class="font-mono text-emerald-300 font-bold">LAMINAR (Health: 98%)</span>
+          </div>
+
+          <div class="flex items-center justify-between bg-slate-950/60 p-2 rounded border border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+              <span class="text-slate-300">3. Solar Microgrid Dispatch:</span>
+            </div>
+            <span id="streamSolar" class="font-mono text-yellow-300 font-bold">100% Direct PV (Zero Battery Drain)</span>
+          </div>
+
+          <div class="flex items-center justify-between bg-slate-950/60 p-2 rounded border border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span class="text-slate-300">4. Slurry Viscosity Density:</span>
+            </div>
+            <span id="streamSlurry" class="font-mono text-amber-300 font-bold">Clean Water (VFD @ 50.0 Hz)</span>
+          </div>
+        </div>
+
+        <!-- AI Recommendation Callout Box -->
+        <div id="boxRecommendation" class="p-3 bg-gradient-to-r from-cyan-950/40 via-blue-950/30 to-slate-900 border border-cyan-800/60 rounded-xl">
+          <div class="flex items-start gap-2">
+            <span class="text-lg">🤖</span>
+            <div>
+              <h3 class="text-xs font-bold text-cyan-300">AI Closed-Loop Action Recommendation:</h3>
+              <p id="txtRecommendation" class="text-xs text-slate-300 mt-0.5 leading-relaxed">
+                Operating Pump #1 at maximum 50.0 Hz. Water drawdown is outpacing groundwater recharge. Safe freeboard buffer is maintained with 100% clean solar generation.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Autonomous Action Execution Panel -->
+        <div class="pt-2 border-t border-slate-800 grid grid-cols-2 gap-2">
+          <button onclick="approveAIAction()" id="btnApproveAction" class="px-3 py-2 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black text-xs rounded-lg transition shadow flex items-center justify-center gap-1 cursor-pointer">
+            <span>⚡</span> AUTO-EXECUTE (DEFAULT)
+          </button>
+          <button onclick="switchBackupPump()" id="btnBackupPump" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-lg border border-slate-700 transition flex items-center justify-center gap-1 cursor-pointer">
+            <span>🔀</span> SWITCH PUMP #2
+          </button>
+        </div>
+
+      </section>
+    </div>
+
+    <!-- BOTTOM ROW: THE 6 BREAKTHROUGH UPGRADE INTERACTIVE CONTROLLERS -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+
+      <!-- UPGRADE 1: SELF-HEALING AUTO-BACKWASH WIDGET -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-800">
+            <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+              <span>🚀</span> 1. Self-Healing Auto-Backwash
+            </span>
+            <span id="tagBackwash" class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono">READY</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1.5">
+            Executes a 5-sec reverse VFD spin & solenoid backflush when intake strainer is choked.
+          </p>
+          <div class="my-2 p-2 bg-slate-950/80 rounded border border-slate-800 text-[11px] flex justify-between">
+            <span class="text-slate-400">Pump Health:</span>
+            <strong id="valPumpHealth" class="text-emerald-400">98% (Optimal)</strong>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-1.5 mt-1">
+          <button onclick="simulateChokeEvent()" class="px-2 py-1.5 bg-amber-950/80 hover:bg-amber-900 border border-amber-700/60 text-amber-200 text-xs font-bold rounded cursor-pointer">
+            ⚠️ Simulate Choke
+          </button>
+          <button onclick="triggerAutoBackwashManual()" class="px-2 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 text-xs font-black rounded cursor-pointer">
+            🔄 Auto-Backwash
+          </button>
+        </div>
+      </div>
+
+      <!-- UPGRADE 2: SLURRY DENSITY-ADAPTIVE VFD -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-800">
+            <span class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+              <span>🌊</span> 2. Sludge-Adaptive VFD
+            </span>
+            <span id="tagVFD" class="text-[9px] px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 font-mono">50.0 Hz</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1.5">
+            Throttles from 50Hz down to 38Hz in abrasive mud to extend impeller lifespan (3 ➔ 18+ mos).
+          </p>
+          <div class="my-2 space-y-1">
+            <div class="flex justify-between text-[11px]">
+              <span class="text-slate-400">Turbidity Slider:</span>
+              <span id="sliderTurbidityVal" class="text-amber-300 font-bold">420 NTU (Clean)</span>
+            </div>
+            <input type="range" id="sliderTurbidity" min="50" max="4000" value="420" oninput="onTurbiditySlider(this.value)" class="w-full accent-cyan-400 cursor-pointer">
+          </div>
+        </div>
+        <div class="text-[10px] text-slate-400 bg-slate-950/60 p-1.5 rounded border border-slate-800 flex justify-between">
+          <span>Impeller Wear Rate:</span>
+          <span id="valWearRate" class="text-emerald-400 font-bold">Low (0.02 mm/mo)</span>
+        </div>
+      </div>
+
+      <!-- UPGRADE 3 & 4: VERNACULAR BHASHINI VOICE SIREN -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-800">
+            <span class="text-xs font-bold text-purple-400 flex items-center gap-1.5">
+              <span>🗣️</span> 4. Bhashini Pit Evac Siren
+            </span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 font-mono">TTC &lt; 45m</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1.5">
+            Synthesizes vernacular spoken sirens over pit horn speakers for excavator drivers.
+          </p>
+          <div class="my-2 space-y-1.5">
+            <select id="selLang" class="w-full bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded p-1.5 cursor-pointer">
+              <option value="hi">🇮🇳 Hindi (हिन्दी)</option>
+              <option value="od">🇮🇳 Odia (ଓଡ଼ିଆ)</option>
+              <option value="bn">🇮🇳 Bengali (বাংলা)</option>
+              <option value="te">🇮🇳 Telugu (తెలుగు)</option>
+              <option value="en">🌐 English Broadcast</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="playBhashiniSiren()" class="w-full px-2 py-1.5 bg-purple-600 hover:bg-purple-500 text-slate-950 text-xs font-black rounded flex items-center justify-center gap-1.5 shadow cursor-pointer">
+          <span>📢</span> BROADCAST PIT SIREN & VOICE
+        </button>
+      </div>
+
+      <!-- UPGRADE 5: P2P MICROGRID DC SHARING -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-800">
+            <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+              <span>⚡</span> 5. Multi-Pit P2P Microgrid
+            </span>
+            <span id="tagP2P" class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 font-mono">DC LINK ACTIVE</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1.5">
+            Routes surplus solar power from dry Pit-A to flooded Pit-B over local DC bus link.
+          </p>
+          <div class="my-2 p-2 bg-slate-950/80 rounded border border-slate-800 text-[11px] space-y-1">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Pit-A Solar Export:</span>
+              <strong id="valP2PExport" class="text-yellow-300">+6.2 kW</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Pit-B Pump Boost:</span>
+              <strong id="valP2PBoost" class="text-emerald-300">Active (100% Clean)</strong>
+            </div>
+          </div>
+        </div>
+        <button onclick="toggleP2PSharing()" id="btnP2PToggle" class="w-full px-2 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold rounded cursor-pointer">
+          🔄 Toggle P2P DC Transfer
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- GUIDED TOUR MODAL DIALOG -->
+  <div id="tourModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-cyan-500 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl" id="tourIcon">✨</span>
+          <h3 id="tourTitle" class="text-lg font-black text-cyan-400">Step 1: Multi-Modal Edge Telemetry</h3>
+        </div>
+        <span id="tourStepIndicator" class="text-xs font-mono px-2 py-1 bg-cyan-950 text-cyan-300 rounded border border-cyan-800">1 / 6</span>
+      </div>
+
+      <div id="tourContent" class="text-sm text-slate-300 leading-relaxed space-y-2">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="flex items-center justify-between pt-4 border-t border-slate-800">
+        <button onclick="closeGuidedTour()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg cursor-pointer">
+          Exit Tour
+        </button>
+        <div class="flex items-center gap-2">
+          <button id="btnTourPrev" onclick="prevTourStep()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg disabled:opacity-40 cursor-pointer">
+            Previous
+          </button>
+          <button id="btnTourNext" onclick="nextTourStep()" class="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 text-slate-950 text-xs font-black rounded-lg cursor-pointer">
+            Next Step →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT SIMULATION & DIGITAL TWIN ENGINE -->
+  <script>
+    // System State Variables
+    const state = {
+      scenario: 'normal',
+      waterLevel: 2.45,
+      criticalLevel: 4.20,
+      inflowRate: 380,
+      dischargeRate: 430,
+      current: 8.1,
+      vibration: 2.1,
+      turbidity: 420,
+      vfdFrequency: 50.0,
+      solarKW: 18.4,
+      irradiance: 890,
+      batterySoC: 92,
+      pumpHealth: 98,
+      activePump: 1,
+      isBackwashing: false,
+      backwashCountdown: 0,
+      p2pActive: true,
+      audioEnabled: true,
+      dieselSaved: 48.5,
+      co2Averted: 3.8
+    };
+
+    // Canvas Variables
+    const canvas = document.getElementById('digitalTwinCanvas');
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let waveOffset = 0;
+    let impellerAngle = 0;
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // SCENARIO SWITCHER
+    function setScenario(scen) {
+      state.scenario = scen;
+      document.querySelectorAll('.scen-btn').forEach(btn => btn.classList.remove('ring-2', 'ring-cyan-400', 'bg-cyan-950'));
+      
+      if (scen === 'normal') {
+        document.getElementById('btnScenNormal').classList.add('ring-2', 'ring-cyan-400');
+        state.waterLevel = 2.45;
+        state.inflowRate = 380;
+        state.dischargeRate = 430;
+        state.current = 8.1;
+        state.vibration = 2.1;
+        state.turbidity = 420;
+        state.vfdFrequency = 50.0;
+        state.solarKW = 18.4;
+        state.batterySoC = 92;
+        state.pumpHealth = 98;
+        state.isBackwashing = false;
+        updateUIRecommendation("Operating Pump #1 at maximum 50.0 Hz. Water drawdown is outpacing inflow. Safe freeboard maintained with 100% solar.", "cyan");
+      } 
+      else if (scen === 'flood') {
+        document.getElementById('btnScenFlood').classList.add('ring-2', 'ring-cyan-400');
+        state.waterLevel = 3.85;
+        state.inflowRate = 1250;
+        state.dischargeRate = 580;
+        state.current = 9.8;
+        state.vibration = 3.4;
+        state.turbidity = 1800;
+        state.vfdFrequency = 50.0;
+        state.solarKW = 6.2;
+        state.batterySoC = 78;
+        updateUIRecommendation("⚠️ FLASH FLOOD ALERT: Inflow (1250 L/m) > Discharge. Time-to-Critical is 24 mins. Activating secondary sump booster and vernacular sirens!", "red");
+        speakText("Savdhan! Sump basin mein jal-star khatarnak sthiti mein pahunchne wala hai. Kripya dhalan khali karein.");
+      }
+      else if (scen === 'choke') {
+        document.getElementById('btnScenChoke').classList.add('ring-2', 'ring-cyan-400');
+        simulateChokeEvent();
+      }
+      else if (scen === 'lowsolar') {
+        document.getElementById('btnScenSolar').classList.add('ring-2', 'ring-cyan-400');
+        state.solarKW = 1.2;
+        state.irradiance = 120;
+        state.batterySoC = 64;
+        state.p2pActive = true;
+        updateUIRecommendation("Cloud cover detected. Microgrid switched seamlessly to 48V LiFePO4 battery with +6.2 kW surplus P2P power imported from Pit-A.", "indigo");
+      }
+      else if (scen === 'failover') {
+        document.getElementById('btnScenFail').classList.add('ring-2', 'ring-cyan-400');
+        state.activePump = 2;
+        state.current = 8.2;
+        state.vibration = 2.0;
+        state.pumpHealth = 100;
+        updateUIRecommendation("Pump #1 isolated for safety. Sub-50ms SSR transferred operation to Pump #2. Zero drawdown interruption.", "purple");
+      }
+      updateUI();
+    }
+
+    // CHOKE EVENT & AUTO-BACKWASH SIMULATION
+    function simulateChokeEvent() {
+      state.turbidity = 3400;
+      state.current = 11.8;
+      state.dischargeRate = 140;
+      state.vibration = 5.9;
+      state.pumpHealth = 42;
+      updateUIRecommendation("⚠️ CAVITATION DETECTED: Current ↑ 11.8A + Flow ↓ 140 L/m + Vibration ↑ 5.9 mm/s. Strainer intake choked with coal slurry. Click [Auto-Backwash] to self-heal!", "amber");
+      updateUI();
+    }
+
+    function triggerAutoBackwashManual() {
+      if (state.isBackwashing) return;
+      state.isBackwashing = true;
+      state.backwashCountdown = 5;
+      updateUIRecommendation("🔄 AUTONOMOUS SELF-HEALING: Executing 5-second reverse VFD rotation and pulsing high-pressure solenoid backflush valve...", "cyan");
+      
+      const interval = setInterval(() => {
+        state.backwashCountdown--;
+        if (state.backwashCountdown <= 0) {
+          clearInterval(interval);
+          state.isBackwashing = false;
+          state.current = 8.1;
+          state.dischargeRate = 440;
+          state.vibration = 2.0;
+          state.turbidity = 650;
+          state.pumpHealth = 98;
+          updateUIRecommendation("✅ SELF-HEALING COMPLETE: Trapped rocks & sludge flushed. Impeller back to laminar efficiency (98% Health).", "emerald");
+          updateUI();
+        }
+      }, 1000);
+    }
+
+    function onTurbiditySlider(val) {
+      state.turbidity = parseInt(val);
+      if (state.turbidity > 1500) {
+        state.vfdFrequency = 38.0;
+        document.getElementById('valWearRate').innerText = "Throttled (0.03 mm/mo)";
+        document.getElementById('valWearRate').className = "text-amber-400 font-bold";
+      } else {
+        state.vfdFrequency = 50.0;
+        document.getElementById('valWearRate').innerText = "Low (0.02 mm/mo)";
+        document.getElementById('valWearRate').className = "text-emerald-400 font-bold";
+      }
+      document.getElementById('sliderTurbidityVal').innerText = val + " NTU";
+      updateUI();
+    }
+
+    function toggleP2PSharing() {
+      state.p2pActive = !state.p2pActive;
+      document.getElementById('valP2PExport').innerText = state.p2pActive ? "+6.2 kW" : "0.0 kW (Isolated)";
+      document.getElementById('tagP2P').innerText = state.p2pActive ? "DC LINK ACTIVE" : "ISOLATED";
+      document.getElementById('tagP2P').className = state.p2pActive ? "text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 font-mono" : "text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono";
+    }
+
+    function switchBackupPump() {
+      state.activePump = state.activePump === 1 ? 2 : 1;
+      document.getElementById('btnBackupPump').innerText = state.activePump === 1 ? "🔀 SWITCH PUMP #2" : "🔀 SWITCH PUMP #1";
+      updateUIRecommendation(`Switched to Pump #${state.activePump}. Telemetry synchronized.`, "cyan");
+      updateUI();
+    }
+
+    function approveAIAction() {
+      triggerAutoBackwashManual();
+    }
+
+    function updateUIRecommendation(text, color) {
+      const el = document.getElementById('txtRecommendation');
+      el.innerText = text;
+      const box = document.getElementById('boxRecommendation');
+      box.className = `p-3 bg-${color}-950/40 border border-${color}-800/80 rounded-xl transition-all duration-300`;
+    }
+
+    function updateUI() {
+      document.getElementById('kpiDepth').innerText = state.waterLevel.toFixed(2) + ' m';
+      document.getElementById('barDepth').style.width = ((state.waterLevel / state.criticalLevel) * 100) + '%';
+      
+      document.getElementById('kpiFlow').innerText = state.dischargeRate + ' L/m';
+      document.getElementById('kpiInflowSub').innerText = 'In: ' + state.inflowRate + ' L/min';
+
+      const netInflow = state.inflowRate - state.dischargeRate;
+      let ttcText = "Safe Buffer";
+      if (netInflow > 0) {
+        const remainingVol = (state.criticalLevel - state.waterLevel) * 25000;
+        const minutes = Math.max(5, Math.round(remainingVol / netInflow));
+        const hrs = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        ttcText = `${hrs}h ${mins}m`;
+        document.getElementById('kpiTTC').innerText = ttcText;
+        document.getElementById('badgeTTC').innerText = minutes < 45 ? "⚠️ CRITICAL HAZARD" : "RISING INFLOW";
+        document.getElementById('badgeTTC').className = minutes < 45 ? "text-[10px] px-1.5 py-0.5 rounded bg-red-950 text-red-400 font-bold animate-pulse" : "text-[10px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 font-bold";
+      } else {
+        document.getElementById('kpiTTC').innerText = "3h 42m";
+        document.getElementById('badgeTTC').innerText = "SAFE FREEBOARD";
+        document.getElementById('badgeTTC').className = "text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold";
+      }
+
+      document.getElementById('kpiCurrent').innerText = state.current.toFixed(1) + ' A';
+      document.getElementById('barCurrent').style.width = Math.min(100, (state.current / 12) * 100) + '%';
+
+      document.getElementById('kpiVib').innerText = state.vibration.toFixed(1) + ' mm/s';
+      document.getElementById('barVib').style.width = Math.min(100, (state.vibration / 6) * 100) + '%';
+
+      document.getElementById('kpiTurbidity').innerText = state.turbidity + ' NTU';
+      document.getElementById('kpiVFDHz').innerText = 'VFD: ' + state.vfdFrequency.toFixed(1) + ' Hz';
+      document.getElementById('tagVFD').innerText = state.vfdFrequency.toFixed(1) + ' Hz';
+
+      document.getElementById('kpiSolar').innerText = state.solarKW.toFixed(1) + ' kW';
+      document.getElementById('barSolar').style.width = Math.min(100, (state.solarKW / 20) * 100) + '%';
+
+      document.getElementById('kpiSoC').innerText = state.batterySoC + '%';
+      document.getElementById('valPumpHealth').innerText = state.pumpHealth + '% (' + (state.pumpHealth > 70 ? "Optimal" : "Degraded") + ')';
+      document.getElementById('valPumpHealth').className = state.pumpHealth > 70 ? "text-emerald-400 font-bold" : "text-amber-400 font-bold";
+
+      document.getElementById('streamCavitation').innerText = state.pumpHealth > 70 ? "LAMINAR (Health: " + state.pumpHealth + "%)" : "⚠️ CAVITATION CHOKE";
+      document.getElementById('streamCavitation').className = state.pumpHealth > 70 ? "font-mono text-emerald-300 font-bold" : "font-mono text-amber-300 font-bold animate-pulse";
+      document.getElementById('dotCavitation').className = state.pumpHealth > 70 ? "w-2 h-2 rounded-full bg-emerald-400" : "w-2 h-2 rounded-full bg-amber-400 animate-ping";
+    }
+
+    function toggleAudio() {
+      state.audioEnabled = !state.audioEnabled;
+      document.getElementById('audioIcon').innerText = state.audioEnabled ? "🔊" : "🔇";
+      document.getElementById('audioText').innerText = state.audioEnabled ? "Sound ON" : "Muted";
+    }
+
+    function playBhashiniSiren() {
+      const lang = document.getElementById('selLang').value;
+      const phrases = {
+        hi: "Savdhan! Sector 7 sump basin mein agle 40 minute mein jal-star khatarnak sthiti mein pahunchne wala hai. Kripya dhalan khali karein.",
+        od: "Satark rahanthu! Sector 7 sump re agami 40 minute re jala-stara bipada sanketa atikrama kariba. Dayakari sthana khali karantu.",
+        bn: "Sotorko thakun! Sector 7 sump-e agami 40 minute-er moddhe jol-er matra bipodjonok porjay pouchabe. Kripoya jaiga khali korun.",
+        te: "Jāgratta! Sector 7 sump lo maro 40 nimishālalo nīti matam pramādakaramaina sthāyiki chērukōvachchu. Dayachēsi dhalan khālī chēyandi.",
+        en: "Attention all pit personnel! Sump basin water level will breach critical threshold in 40 minutes. Evacuate bench terraces immediately."
+      };
+      speakText(phrases[lang] || phrases.en);
+    }
+
+    function speakText(text) {
+      if (!state.audioEnabled) return;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.95;
+        utterance.pitch = 1.0;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    // Canvas Rendering
+    function renderDigitalTwin() {
+      const w = canvas.width / window.devicePixelRatio;
+      const h = canvas.height / window.devicePixelRatio;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Sky
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.35);
+      skyGrad.addColorStop(0, '#0c1527');
+      skyGrad.addColorStop(1, '#070b14');
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Sun
+      const sunX = w * 0.85;
+      const sunY = 35;
+      const sunIntensity = state.solarKW / 20;
+      
+      ctx.beginPath();
+      ctx.arc(sunX, sunY, 16 + sunIntensity * 6, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(251, 191, 36, ${0.4 + sunIntensity * 0.6})`;
+      ctx.fill();
+
+      // Solar Panels
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(sunX - 70, 48, 50, 14);
+      ctx.fillStyle = '#0284c7';
+      for (let p = 0; p < 4; p++) {
+        ctx.fillRect(sunX - 68 + p * 12, 50, 10, 10);
+      }
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '9px monospace';
+      ctx.fillText('PV 18.4kW', sunX - 72, 72);
+
+      // Terraces
+      ctx.beginPath();
+      ctx.moveTo(0, h * 0.28);
+      ctx.lineTo(w * 0.25, h * 0.28);
+      ctx.lineTo(w * 0.32, h * 0.48);
+      ctx.lineTo(w * 0.50, h * 0.48);
+      ctx.lineTo(w * 0.58, h * 0.70);
+      ctx.lineTo(w, h * 0.70);
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+
+      const rockGrad = ctx.createLinearGradient(0, h * 0.2, 0, h);
+      rockGrad.addColorStop(0, '#1e293b');
+      rockGrad.addColorStop(0.5, '#0f172a');
+      rockGrad.addColorStop(1, '#090d16');
+      ctx.fillStyle = rockGrad;
+      ctx.fill();
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // LoRa Repeaters
+      const repeaters = [
+        { x: w * 0.22, y: h * 0.28 - 14, name: 'Gateway (Surface)' },
+        { x: w * 0.46, y: h * 0.48 - 14, name: 'LoRa Node 2 (EL+85m)' },
+        { x: w * 0.68, y: h * 0.70 - 14, name: 'LoRa Node 1 (EL+40m)' }
+      ];
+
+      repeaters.forEach((rep) => {
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(rep.x, rep.y + 14);
+        ctx.lineTo(rep.x, rep.y);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(rep.x, rep.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#22d3ee';
+        ctx.fill();
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '8px monospace';
+        ctx.fillText(rep.name, rep.x - 30, rep.y - 6);
+      });
+
+      // LoRa Signals
+      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+      ctx.beginPath();
+      ctx.moveTo(repeaters[2].x, repeaters[2].y);
+      ctx.lineTo(repeaters[1].x, repeaters[1].y);
+      ctx.lineTo(repeaters[0].x, repeaters[0].y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Sump Water
+      const sumpLeft = w * 0.58;
+      const sumpTop = h * 0.70;
+      const waterHeight = Math.min(h - sumpTop - 10, (state.waterLevel / state.criticalLevel) * (h - sumpTop));
+      const waterSurfaceY = h - waterHeight - 10;
+
+      const turbRatio = Math.min(1, state.turbidity / 3000);
+      const waterR = Math.round(6 * (1 - turbRatio) + 120 * turbRatio);
+      const waterG = Math.round(182 * (1 - turbRatio) + 70 * turbRatio);
+      const waterB = Math.round(212 * (1 - turbRatio) + 20 * turbRatio);
+
+      ctx.beginPath();
+      ctx.moveTo(sumpLeft, waterSurfaceY);
+      for (let x = sumpLeft; x <= w; x += 10) {
+        const wave = Math.sin((x + waveOffset * 8) * 0.05) * 2.5;
+        ctx.lineTo(x, waterSurfaceY + wave);
+      }
+      ctx.lineTo(w, h);
+      ctx.lineTo(sumpLeft, h);
+      ctx.closePath();
+
+      const waterGrad = ctx.createLinearGradient(0, waterSurfaceY, 0, h);
+      waterGrad.addColorStop(0, `rgba(${waterR}, ${waterG}, ${waterB}, 0.75)`);
+      waterGrad.addColorStop(1, `rgba(${Math.round(waterR * 0.4)}, ${Math.round(waterG * 0.4)}, ${Math.round(waterB * 0.4)}, 0.95)`);
+      ctx.fillStyle = waterGrad;
+      ctx.fill();
+
+      // Critical Level Line
+      const critY = h - (h - sumpTop) + 12;
+      ctx.strokeStyle = '#ef4444';
+      ctx.setLineDash([6, 4]);
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(sumpLeft, critY);
+      ctx.lineTo(w, critY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#f87171';
+      ctx.font = '9px monospace';
+      ctx.fillText('CRITICAL FREEBOARD (4.2m)', w - 150, critY - 4);
+
+      // Pump
+      const pumpX = w * 0.78;
+      const pumpY = h - 45;
+
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 7;
+      ctx.beginPath();
+      ctx.moveTo(pumpX, pumpY);
+      ctx.lineTo(pumpX, h * 0.35);
+      ctx.lineTo(0, h * 0.35);
+      ctx.stroke();
+
+      ctx.strokeStyle = state.isBackwashing ? '#f59e0b' : '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([8, 6]);
+      ctx.lineDashOffset = state.isBackwashing ? -waveOffset * 3 : waveOffset * 3;
+      ctx.beginPath();
+      ctx.moveTo(pumpX, pumpY);
+      ctx.lineTo(pumpX, h * 0.35);
+      ctx.lineTo(0, h * 0.35);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = state.activePump === 1 ? '#0284c7' : '#64748b';
+      ctx.fillRect(pumpX - 16, pumpY - 20, 32, 40);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(pumpX - 16, pumpY - 20, 32, 40);
+
+      // Impeller
+      ctx.save();
+      ctx.translate(pumpX, pumpY);
+      impellerAngle += state.isBackwashing ? -0.25 : (state.vfdFrequency / 50) * 0.2;
+      ctx.rotate(impellerAngle);
+      ctx.strokeStyle = state.isBackwashing ? '#f59e0b' : '#38bdf8';
+      ctx.lineWidth = 2.5;
+      for (let b = 0; b < 4; b++) {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos((b * Math.PI) / 2) * 10, Math.sin((b * Math.PI) / 2) * 10);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(pumpX - 12, pumpY + 20, 24, 8);
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '8px monospace';
+      ctx.fillText(state.isBackwashing ? 'BACKWASH' : 'PUMP #1 (50Hz)', pumpX - 32, pumpY - 26);
+
+      if (state.isBackwashing) {
+        ctx.fillStyle = '#fbbf24';
+        for (let p = 0; p < 8; p++) {
+          const bx = pumpX + (Math.random() * 30 - 15);
+          const by = pumpY + 20 + Math.random() * 20;
+          ctx.beginPath();
+          ctx.arc(bx, by, 2 + Math.random() * 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      waveOffset += 0.05;
+      animationFrameId = requestAnimationFrame(renderDigitalTwin);
+    }
+
+    // Guided Tour
+    const tourSteps = [
+      {
+        title: "Step 1: Multi-Modal Edge Telemetry (SENSE)",
+        icon: "🌊",
+        content: `
+          <p>The system fuses <strong>dual hydrostatic & ultrasonic probes</strong> (measuring sump depth), <strong>non-invasive split-core CT clamps</strong> (capturing motor current), and <strong>tri-axial accelerometers</strong> (vibration FFT spectra).</p>
+          <div class="p-2 bg-slate-950 rounded border border-slate-800 text-xs font-mono text-cyan-300">
+            Telemetry is acquired at 10Hz locally on the sub-$10 ESP32-S3 microcontroller.
+          </div>
+        `
+      },
+      {
+        title: "Step 2: Physics-Informed Flood Forecasting (PREDICT)",
+        icon: "⏱️",
+        content: `
+          <p>Instead of basic float switches, an on-device <strong>PINN (Physics-Informed Neural Network)</strong> calculates dynamic <strong>Time-to-Critical (TTC)</strong> using real-time rainfall rate and catchment geometry.</p>
+          <div class="p-2 bg-slate-950 rounded border border-slate-800 text-xs font-mono text-amber-300">
+            TTC = (H_critical - H_current) / (Q_inflow - Q_discharge)
+          </div>
+          <p>This allows the AI to safely wait for solar peak hours without flood breach risks.</p>
+        `
+      },
+      {
+        title: "Step 3: Multi-Signal Cavitation Fingerprint (DIAGNOSE)",
+        icon: "🧠",
+        content: `
+          <p>Traditional systems trigger false alarms on simple voltage dips. EdgeGuard AI cross-correlates:</p>
+          <div class="p-2 bg-slate-950 rounded border border-slate-800 text-xs font-mono text-emerald-300">
+            Cavitation Detected ⇔ (Current ↑) ∧ (Flow ↓) ∧ (Vibration ↑)
+          </div>
+          <p>Catches impeller choking in &lt;200ms before motor insulation melts.</p>
+        `
+      },
+      {
+        title: "Step 4: Self-Healing Auto-Backwash & Density VFD (ACT)",
+        icon: "🚀",
+        content: `
+          <p>When choked with coal mud, the ESP32 executes a <strong>5-second reverse VFD rotation</strong> and opens a solenoid backflush valve—dislodging trapped rocks automatically.</p>
+          <p>In heavy abrasive slurry, it throttles the VFD to <strong>38 Hz</strong>, extending impeller life from 3 to 18+ months.</p>
+        `
+      },
+      {
+        title: "Step 5: Terraced LoRa Mesh & Bhashini Voice (COMMUNICATE)",
+        icon: "📡",
+        content: `
+          <p>Solar-powered LoRa repeaters placed along bench terraces (EL +40m, +85m, +120m) overcome subterranean electromagnetic blackouts.</p>
+          <p>When TTC &lt; 45 mins, it broadcasts <strong>Bhashini AI voice sirens</strong> in Hindi, Odia, Bengali, or Telugu over pit horn speakers to evacuate laborers.</p>
+        `
+      },
+      {
+        title: "Step 6: P2P Microgrid DC Power Sharing (DECIDE)",
+        icon: "⚡",
+        content: `
+          <p>A decentralized peer-to-peer DC bus controller automatically routes surplus solar generation from dry pits (Pit-A) to flooded pits (Pit-B).</p>
+          <div class="p-2 bg-slate-950 rounded border border-slate-800 text-xs font-mono text-cyan-300">
+            Saves ₹16.8 Lakhs in diesel annually with a payback under 25 days.
+          </div>
+        `
+      }
+    ];
+
+    let currentTourIndex = 0;
+
+    function startGuidedTour() {
+      currentTourIndex = 0;
+      showTourStep(0);
+      document.getElementById('tourModal').classList.remove('hidden');
+    }
+
+    function closeGuidedTour() {
+      document.getElementById('tourModal').classList.add('hidden');
+    }
+
+    function showTourStep(index) {
+      const step = tourSteps[index];
+      document.getElementById('tourIcon').innerText = step.icon;
+      document.getElementById('tourTitle').innerText = step.title;
+      document.getElementById('tourContent').innerHTML = step.content;
+      document.getElementById('tourStepIndicator').innerText = `${index + 1} / ${tourSteps.length}`;
+      document.getElementById('btnTourPrev').disabled = index === 0;
+      document.getElementById('btnTourNext').innerText = index === tourSteps.length - 1 ? "Finish Tour" : "Next Step →";
+    }
+
+    function nextTourStep() {
+      if (currentTourIndex < tourSteps.length - 1) {
+        currentTourIndex++;
+        showTourStep(currentTourIndex);
+      } else {
+        closeGuidedTour();
+      }
+    }
+
+    function prevTourStep() {
+      if (currentTourIndex > 0) {
+        currentTourIndex--;
+        showTourStep(currentTourIndex);
+      }
+    }
+
+    function toggleSludgeTurbidity() {
+      if (state.turbidity < 1000) {
+        onTurbiditySlider(2800);
+        document.getElementById('sliderTurbidity').value = 2800;
+      } else {
+        onTurbiditySlider(420);
+        document.getElementById('sliderTurbidity').value = 420;
+      }
+    }
+
+    window.addEventListener('load', () => {
+      resizeCanvas();
+      renderDigitalTwin();
+      updateUI();
+    });
+  </script>
+</body>
+</html>
